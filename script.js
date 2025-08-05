@@ -11,13 +11,11 @@ const products = [
       const cartList = document.getElementById("cart-list");
       const clearCartBtn = document.getElementById("clear-cart-btn");
 
-      // Cart data - using in-memory storage for artifact compatibility
-      // In real environment, this would use sessionStorage
       let cart = [];
 
-      // Load cart from storage
+
       function loadCart() {
-        try { 
+        try {
           const savedCart = sessionStorage.getItem('cart');
           return savedCart ? JSON.parse(savedCart) : [];
         } catch (error) {
@@ -26,18 +24,14 @@ const products = [
         }
       }
 
-      // Save cart to storage
       function saveCart() {
         try {
-          // In real environment:
           sessionStorage.setItem('cart', JSON.stringify(cart));
-          // For artifact environment, cart is already in memory
         } catch (error) {
           console.error('Error saving cart:', error);
         }
       }
 
-      // Render product list
       function renderProducts() {
         products.forEach((product) => {
           const li = document.createElement("li");
@@ -45,7 +39,6 @@ const products = [
           productList.appendChild(li);
         });
 
-        // Add event listeners to add-to-cart buttons
         document.querySelectorAll('.add-to-cart-btn').forEach(button => {
           button.addEventListener('click', (e) => {
             const productId = parseInt(e.target.getAttribute('data-id'));
@@ -54,19 +47,13 @@ const products = [
         });
       }
 
-      // Render cart list
       function renderCart() {
         cartList.innerHTML = '';
         
         if (cart.length === 0) {
-          const li = document.createElement("li");
-          li.className = "empty-cart";
-          li.textContent = "Your cart is empty";
-          cartList.appendChild(li);
           return;
         }
 
-        // Group items by id and count quantities
         const groupedItems = {};
         cart.forEach(item => {
           if (groupedItems[item.id]) {
@@ -76,7 +63,6 @@ const products = [
           }
         });
 
-        // Render grouped items
         Object.values(groupedItems).forEach(item => {
           const li = document.createElement("li");
           const totalPrice = item.price * item.quantity;
@@ -88,7 +74,6 @@ const products = [
           cartList.appendChild(li);
         });
 
-        // Add event listeners to remove buttons
         document.querySelectorAll('.remove-btn').forEach(button => {
           button.addEventListener('click', (e) => {
             const productId = parseInt(e.target.getAttribute('data-id'));
@@ -97,7 +82,6 @@ const products = [
         });
       }
 
-      // Add item to cart
       function addToCart(productId) {
         const product = products.find(p => p.id === productId);
         if (product) {
@@ -107,7 +91,6 @@ const products = [
         }
       }
 
-      // Remove item from cart
       function removeFromCart(productId) {
         const index = cart.findIndex(item => item.id === productId);
         if (index > -1) {
@@ -117,22 +100,19 @@ const products = [
         }
       }
 
-      // Clear cart
+    
       function clearCart() {
         cart = [];
         saveCart();
         renderCart();
       }
 
-      // Initialize the application
       function init() {
         cart = loadCart();
         renderProducts();
         renderCart();
         
-        // Add event listener for clear cart button
         clearCartBtn.addEventListener('click', clearCart);
       }
 
-      // Initial render
       init();
